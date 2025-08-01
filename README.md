@@ -67,7 +67,8 @@ npm install
 yarn install
 npm run dev
 ```
-###🧪 Backend Setup (Node.js + Express)
+
+### 🧪 Backend Setup (Node.js + Express)
 ```bash
 cd ../server
 npm install
@@ -76,7 +77,8 @@ cp .env.example .env
 # Configure: DB_URI, JWT_SECRET, PAYMENT_KEYS, etc.
 npm run dev
 ```
-🔐 Environment Variables
+
+### 🔐 Environment Variables
 
 Create .env in /server with:
 ```bash
@@ -89,7 +91,7 @@ FRONTEND_URL=http://localhost:5173
 - use MongoDB compass for Database in localhost
 (Optional) For frontend: create .env in /client if using environment-specific configs.
 
-###👥 Contributing
+### 👥 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 - Create your branch (git checkout -b feature/feature-name)
