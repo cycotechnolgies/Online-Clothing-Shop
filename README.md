@@ -99,3 +99,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 - Push to the branch (git push origin feature/feature-name)
 - Open a Pull Request
 
+Documantation : https://github.com/cycotechnolgies/Online-Clothing-Shop/wiki
