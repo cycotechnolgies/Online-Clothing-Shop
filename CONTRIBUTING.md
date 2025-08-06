@@ -41,13 +41,12 @@ Unsure where to begin? Look for issues tagged with `good first issue`. These are
 
 ## Development Setup
 
-1.  **Fork the repository** on GitHub.
-2.  **Clone your fork** locally:
+1.  **Clone your fork** locally:
     ```bash
     git clone https://github.com/your-username/Online-Clothing-Shop.git
     cd Online-Clothing-Shop
     ```
-3.  **Set up the development environment** by following the instructions in the `README.md` file.
+2.  **Set up the development environment** by following the instructions in the `README.md` file.
 
 ## Making Changes: The Contribution Workflow
 
