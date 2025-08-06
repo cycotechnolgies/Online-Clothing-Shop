@@ -94,7 +94,7 @@ FRONTEND_URL=http://localhost:5173
 ### 👥 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-[Contribution Guide](CONTRIBUTION.md)
+[Contribution Guide](CONTRIBUTING.md)
 
 - Create your branch (git checkout -b feature/feature-name)
 - Commit your changes (git commit -m 'Add some feature')
