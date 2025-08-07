@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-import Footer from './components/Footer.jsx'
+import HomeView from './pages/views/HomeView'
+
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Footer />
+      <HomeView />
     </>
   )
 }
