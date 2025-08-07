@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
@@ -9,8 +7,12 @@ function App() {
   return (
     <>
       <h1 className='text-3xl font-bold underline text-center mt-10'>
-        POS-SYSTEM
+        Online-Clothing-Shop
       </h1>
+      <button
+        onClick={() => setCount(count + 1)}
+        className='px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300'
+      >click me</button>
     </>
   )
 }
