@@ -1,7 +1,7 @@
 import React from 'react'
 import image from '../../assets/image.png'
 
-const login = () => {
+const LoginView = () => {
   return (
     <div class="lg:flex lg:items-center lg:justify-content-between lg:mx-auto lg:w-250 lg:gap-15 bg-gray-50 lg:mt-8">
      <img 
@@ -62,4 +62,4 @@ const login = () => {
   )
 }
 
-export default login
+export default LoginView;
