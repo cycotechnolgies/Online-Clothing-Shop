@@ -7,7 +7,7 @@ const HomeView = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <FeaturedProducts/>
+            <FeaturedProducts/>
        <Footer />
     </div>
   )
