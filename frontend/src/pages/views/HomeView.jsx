@@ -9,9 +9,9 @@ const HomeView = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
+            <HeroCarousel />
             <FeaturedProducts/>
-       <HeroCarousel />
-      <Categories />
+            <Categories />
       <Footer />
     </div>
   )
