@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/* your custom utility */
+@layer utilities {
+  .card {
+    @apply bg-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.05)];
+  }
+}
