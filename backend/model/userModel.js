@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs"); // added
+const bcrypt = require("bcryptjs"); 
+
 
 const userSchema = new mongoose.Schema({
   firstName: String,
@@ -11,6 +12,7 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
   collection: "users"
 });
+
 
 userSchema.add({
   userId: { type: String, unique: true, sparse: true } // optional custom id
