@@ -1,12 +1,12 @@
 import React from 'react'
+import { Link } from 'react-router-dom' // for routing
 import image from '../../assets/login.png'
 import logo from '../../assets/OLLY LOGO.png'
 import google from '../../assets/google.svg'
-import facebook from '../../assets/facebook.svg'
 
 const LoginView = () => {
   return (
-    <div className="lg:flex lg:items-center lg:justify-content-between lg:mx-auto lg:w-250 bg-white shadow-lg lg:mt-8 rounded-4xl">
+    <div className="lg:flex lg:items-center lg:justify-between lg:mx-auto lg:w-250 bg-white border border-gray-300 lg:mt-8 rounded-4xl">
       {/* Left image section */}
       <div className='lg:ml-20 rounded-4xl hidden mx-auto h-100 w-100 lg:flex'>
         <img src={image} alt="Your Company" />
@@ -16,12 +16,12 @@ const LoginView = () => {
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 lg:w-150">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className='flex items-center justify-center gap-x-2'>
-            <img src={logo} alt="Your Company" className="h-10 w-auto p-2" />
+            <img src={logo} alt="Your Company" className="h-14 w-auto p-2" /> {/* logo bigger */}
           </div>
-          <h2 className="mt-4 text-center text-3xl/9 font-bold tracking-tight text-gray-900">
-            Wellcome back
+          <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-gray-900">
+            Welcome back
           </h2>
-          <p className="mt-1 text-center text-sm font-semiboldbold tracking-tight text-gray-400">
+          <p className="mt-1 text-center text-sm font-medium text-gray-400">
             Please login to your account
           </p>
         </div>
@@ -29,7 +29,7 @@ const LoginView = () => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form action="#" method="POST" className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
@@ -39,14 +39,14 @@ const LoginView = () => {
                   name="email"
                   required
                   autoComplete="email"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                   Password
                 </label>
                 <div className="text-sm">
@@ -62,7 +62,7 @@ const LoginView = () => {
                   name="password"
                   required
                   autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600"
                 />
               </div>
             </div>
@@ -70,31 +70,34 @@ const LoginView = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs"
+                className="flex w-full justify-center rounded-md bg-black px-4 py-2 text-sm font-semibold text-white"
               >
                 Sign in
               </button>
             </div>
           </form>
 
-          <p className="mt-6 text-center text-sm/6 text-gray-400 flex items-center">
-            <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
-            Or Login With
-            <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
+          <p className="mt-6 text-center text-sm text-gray-400 flex items-center justify-center">
+          <hr className="flex-1 border-t border-gray-300 mx-2" />
+          Or Login With
+          <hr className="flex-1 border-t border-gray-300 mx-2" />
           </p>
+
 
           <div className="mt-6 flex items-center justify-center gap-x-6 lg:justify-center">
             <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-white border border-gray-400 px-1 py-1.5 text-sm/6 font-semibold text-black shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-100 items-center gap-x-2"
+              type="button"
+              className="flex w-full justify-center rounded-md bg-white border border-gray-400 px-4 py-2 text-sm font-semibold text-black items-center gap-x-2"
             >
-              <img src={google} className="h-4 w-auto" /> Google
+              <img src={google} className="h-4 w-auto" alt="Google" /> Google
             </button>
           </div>
 
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
+          <p className="mt-10 text-center text-sm text-gray-400">
             Don't have an account?
-            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500"> Sign Up</a>
+            <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              {' '}Sign Up
+            </Link>
           </p>
         </div>
       </div>
