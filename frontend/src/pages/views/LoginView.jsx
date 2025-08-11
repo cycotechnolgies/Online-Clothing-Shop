@@ -25,7 +25,6 @@ const LoginView = () => {
             Please login to your account
           </p>
         </div>
-
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form action="#" method="POST" className="space-y-6">
             <div>
