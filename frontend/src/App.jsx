@@ -1,39 +1,39 @@
-import { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+// src/App.jsx
+import { Routes, Route, Outlet } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import './App.css'
+import { AuthProvider } from "./context/AuthContext";
+import './App.css';
 
 // pages
 import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
 import SignupView from "./pages/views/SignupView";
 
-const GOOGLE_CLIENT_ID = "516625281326-69julajhd1f8oq4htv4cfvssu6v5u8i2.apps.googleusercontent.com"; // Replace this with your Google OAuth client ID
+const GOOGLE_CLIENT_ID = "516625281326-69julajhd1f8oq4htv4cfvssu6v5u8i2.apps.googleusercontent.com";
+
+// A layout component without the Header
+const AppLayout = () => {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};
 
 function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <Routes>
-        {/* homepage Route */}
-        <Route
-          path="/"
-          element={<HomeView />}
-        />
-
-        {/* Login Route */}
-        <Route
-          path="/login"
-          element={<LoginView />}
-        />
-
-        {/* Signup Route */}
-        <Route
-          path="/signup"
-          element={<SignupView />}
-        />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<HomeView />} />
+            <Route path="login" element={<LoginView />} />
+            <Route path="signup" element={<SignupView />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </GoogleOAuthProvider>
-  )
+  );
 }
 
 export default App;
