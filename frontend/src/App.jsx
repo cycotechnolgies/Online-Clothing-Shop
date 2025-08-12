@@ -5,6 +5,7 @@ import './App.css'
 //pages
 import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
+import SignupView from "./pages/views/SignupView";
 
 
 function App() {
@@ -22,6 +23,12 @@ function App() {
         <Route
           path="/login"
           element={<LoginView />}
+        />
+
+        {/* Signup Route */}
+        <Route
+          path="/signup"
+          element={<SignupView />}
         />
       </Routes>
     </>
