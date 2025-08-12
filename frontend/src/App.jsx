@@ -9,7 +9,7 @@ import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
 import SignupView from "./pages/views/SignupView";
 
-const GOOGLE_CLIENT_ID = "516625281326-69julajhd1f8oq4htv4cfvssu6v5u8i2.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 // A layout component without the Header
 const AppLayout = () => {
