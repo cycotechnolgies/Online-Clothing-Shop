@@ -3,42 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/Header.jsx";
 import Footer from "../../components/Footer.jsx";
 import Breadcrumbs from "../../components/Breadcrumbs.jsx";
-
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Illustration from "../../assets/signup.png";
-
-/* -------------------- Validation -------------------- */
-const basePassword = z
-  .string()
-  .min(8, "At least 8 characters")
-  .regex(/[A-Z]/, "Add an uppercase letter")
-  .regex(/[a-z]/, "Add a lowercase letter")
-  .regex(/[0-9]/, "Add a number");
-
-const signupSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    username: z.string().min(3, "Username must be at least 3 characters"),
-    phone: z
-      .string()
-      .min(7, "Phone number looks too short")
-      .regex(/^[0-9+\-\s()]*$/, "Use digits and + - ( ) only")
-      .optional()
-      .or(z.literal("")),
-    email: z.string().email("Enter a valid email"),
-    password: basePassword,
-    confirmPassword: z.string(),
-  })
-  .refine((v) => v.password === v.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { signupSchema } from "../../schemas/authSchemas";
+import SignupImage from "../../assets/signup.png";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SignupView() {
-  // measure header/footer/breadcrumb to keep your layout stable
   const headerRef = useRef(null);
   const footerRef = useRef(null);
   const crumbRef = useRef(null);
@@ -50,7 +21,11 @@ export default function SignupView() {
       const h = headerRef.current?.offsetHeight ?? 0;
       const f = footerRef.current?.offsetHeight ?? 0;
       const c = crumbRef.current?.offsetHeight ?? 0;
-      setVars({ ["--header-h"]: `${h}px`, ["--footer-h"]: `${f}px`, ["--crumb-h"]: `${c}px` });
+      setVars({
+        ["--header-h"]: `${h}px`,
+        ["--footer-h"]: `${f}px`,
+        ["--crumb-h"]: `${c}px`,
+      });
     };
     update();
     window.addEventListener("resize", update);
@@ -68,10 +43,7 @@ export default function SignupView() {
     mode: "onTouched",
   });
 
-  const [flash, setFlash] = useState(null); // success/error banner
-
   async function onSubmit(values) {
-    setFlash(null);
     clearErrors("root");
 
     const payload = {
@@ -84,27 +56,13 @@ export default function SignupView() {
     };
 
     try {
-      // TODO: replace with your real endpoint
-      // const res = await fetch("/api/register", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(payload),
-      // });
-      // if (!res.ok) {
-      //   const err = await res.json().catch(() => ({}));
-      //   if (err?.field === "email") setError("email", { message: err.message || "Email already exists" });
-      //   else if (err?.field === "username") setError("username", { message: err.message || "Username taken" });
-      //   else setError("root", { message: err.message || "Registration failed" });
-      //   return;
-      // }
-
-      // Simulated success
+      // TODO: Replace with real API call
       await new Promise((r) => setTimeout(r, 700));
-      setFlash({ type: "success", msg: "Account created! Redirecting to login..." });
-      setTimeout(() => navigate("/login"), 900);
+      toast.success("Account created! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 1000);
     } catch (e) {
       setError("root", { message: "Network error. Please try again." });
-      setFlash({ type: "error", msg: "Network error. Please try again." });
+      toast.error("Network error. Please try again.");
     }
   }
 
@@ -115,13 +73,15 @@ export default function SignupView() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white" style={vars}>
+      <Toaster position="top-center" reverseOrder={false} />
+
       {/* Header */}
       <div ref={headerRef}>
         <Header />
       </div>
 
       <main className="flex-1">
-        {/* Breadcrumb + separator */}
+        {/* Breadcrumb */}
         <div ref={crumbRef} className="mx-auto w-full max-w-7xl px-6 pt-3 md:pt-4">
           <div className="text-[13px] text-slate-500">
             <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Signup" }]} />
@@ -129,37 +89,15 @@ export default function SignupView() {
           <div className="mt-2 border-b border-slate-200" />
         </div>
 
-        {/* Signup (compact card) */}
+        {/* Signup */}
         <section className="mx-auto w-full max-w-7xl px-6 flex items-center justify-center py-8 mb-10">
           <div className="card mx-auto w-full max-w-[700px] px-6 py-6 md:px-8 md:py-8">
-            {/* Flash message */}
-            {flash && (
-              <div
-                className={`mb-4 rounded-md px-3 py-2 text-sm ${
-                  flash.type === "success"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
-                }`}
-                role="status"
-              >
-                {flash.msg}
-              </div>
-            )}
-            {errors.root?.message && (
-              <div
-                className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
-                role="alert"
-              >
-                {errors.root.message}
-              </div>
-            )}
-
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-              {/* Illustration */}
+              {/* Image */}
               <div className="order-2 md:order-1 flex items-center justify-center">
                 <img
-                  src={Illustration}
-                  alt="Illustration for secure signup"
+                  src={SignupImage}
+                  alt="Signup"
                   className="w-full max-w-[250px] md:max-w-[480px] max-h-[480px] object-contain select-none"
                 />
               </div>
@@ -182,9 +120,6 @@ export default function SignupView() {
                   {/* First & Last */}
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div>
-                      <label className="sr-only" htmlFor="firstName">
-                        First Name
-                      </label>
                       <input
                         id="firstName"
                         {...register("firstName")}
@@ -192,14 +127,9 @@ export default function SignupView() {
                         aria-invalid={!!errors.firstName}
                         className={inputBase}
                       />
-                      {errors.firstName && (
-                        <p className={errorText}>{errors.firstName.message}</p>
-                      )}
+                      {errors.firstName && <p className={errorText}>{errors.firstName.message}</p>}
                     </div>
                     <div>
-                      <label className="sr-only" htmlFor="lastName">
-                        Last Name
-                      </label>
                       <input
                         id="lastName"
                         {...register("lastName")}
@@ -207,17 +137,12 @@ export default function SignupView() {
                         aria-invalid={!!errors.lastName}
                         className={inputBase}
                       />
-                      {errors.lastName && (
-                        <p className={errorText}>{errors.lastName.message}</p>
-                      )}
+                      {errors.lastName && <p className={errorText}>{errors.lastName.message}</p>}
                     </div>
                   </div>
 
                   {/* Username */}
                   <div>
-                    <label className="sr-only" htmlFor="username">
-                      Username
-                    </label>
                     <input
                       id="username"
                       {...register("username")}
@@ -225,16 +150,11 @@ export default function SignupView() {
                       aria-invalid={!!errors.username}
                       className={inputBase}
                     />
-                    {errors.username && (
-                      <p className={errorText}>{errors.username.message}</p>
-                    )}
+                    {errors.username && <p className={errorText}>{errors.username.message}</p>}
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label className="sr-only" htmlFor="phone">
-                      Phone Number
-                    </label>
                     <input
                       id="phone"
                       {...register("phone")}
@@ -243,16 +163,11 @@ export default function SignupView() {
                       aria-invalid={!!errors.phone}
                       className={inputBase}
                     />
-                    {errors.phone && (
-                      <p className={errorText}>{errors.phone.message}</p>
-                    )}
+                    {errors.phone && <p className={errorText}>{errors.phone.message}</p>}
                   </div>
 
                   {/* Email */}
                   <div>
-                    <label className="sr-only" htmlFor="email">
-                      Email
-                    </label>
                     <input
                       id="email"
                       {...register("email")}
@@ -261,16 +176,11 @@ export default function SignupView() {
                       aria-invalid={!!errors.email}
                       className={inputBase}
                     />
-                    {errors.email && (
-                      <p className={errorText}>{errors.email.message}</p>
-                    )}
+                    {errors.email && <p className={errorText}>{errors.email.message}</p>}
                   </div>
 
                   {/* Password */}
                   <div>
-                    <label className="sr-only" htmlFor="password">
-                      Password
-                    </label>
                     <input
                       id="password"
                       {...register("password")}
@@ -279,16 +189,11 @@ export default function SignupView() {
                       aria-invalid={!!errors.password}
                       className={inputBase}
                     />
-                    {errors.password && (
-                      <p className={errorText}>{errors.password.message}</p>
-                    )}
+                    {errors.password && <p className={errorText}>{errors.password.message}</p>}
                   </div>
 
                   {/* Confirm Password */}
                   <div>
-                    <label className="sr-only" htmlFor="confirmPassword">
-                      Confirm Password
-                    </label>
                     <input
                       id="confirmPassword"
                       {...register("confirmPassword")}
@@ -298,9 +203,7 @@ export default function SignupView() {
                       className={inputBase}
                     />
                     {errors.confirmPassword && (
-                      <p className={errorText}>
-                        {errors.confirmPassword.message}
-                      </p>
+                      <p className={errorText}>{errors.confirmPassword.message}</p>
                     )}
                   </div>
 
@@ -308,8 +211,7 @@ export default function SignupView() {
                   <button
                     type="submit"
                     disabled={
-                      isSubmitting ||
-                      (!isValid && Object.keys(touchedFields).length > 0)
+                      isSubmitting || (!isValid && Object.keys(touchedFields).length > 0)
                     }
                     className="mt-1 w-full rounded-md bg-[#8AB872] py-2 text-center text-[13px] font-semibold text-white
                                transition hover:bg-green-600 active:translate-y-[1px]
@@ -321,10 +223,7 @@ export default function SignupView() {
 
                 <p className="mt-2 text-center text-xs text-slate-600">
                   Already have an account?{" "}
-                  <Link
-                    to="/login"
-                    className="font-medium text-indigo-600 hover:underline"
-                  >
+                  <Link to="/login" className="font-medium text-indigo-600 hover:underline">
                     Login
                   </Link>
                 </p>

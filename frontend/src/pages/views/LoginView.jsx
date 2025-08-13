@@ -1,11 +1,14 @@
 import React from 'react'
 import image from '../../assets/image.png'
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
+=======
 
 import cart from '../../assets/cart.svg'
 import google from '../../assets/google.svg'
 import facebook from '../../assets/facebook.svg'
 
+>>>>>>> 4-signup-interface-ui
 
 const LoginView = () => {
   return (
@@ -58,12 +61,18 @@ const LoginView = () => {
 
     <p class="mt-10 text-center text-sm/6 text-gray-400">
       Don't have an account?
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4-signup-interface-ui
       {/* <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500"> Sign Up</a> */}
       <Link to="/signup" className="font-medium text-indigo-600 hover:underline">
                   Sign Up
       </Link>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4-signup-interface-ui
     </p>
   </div>
 </div>
