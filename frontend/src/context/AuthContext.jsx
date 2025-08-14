@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Accepts either a JWT token (Google) or a user object (Facebook)
+
   const login = (data) => {
     let userData;
     if (typeof data === 'string') {
