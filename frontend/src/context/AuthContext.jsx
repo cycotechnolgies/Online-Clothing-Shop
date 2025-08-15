@@ -1,5 +1,4 @@
-// src/context/AuthContext.js
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext(null);
@@ -14,26 +13,40 @@ export const AuthProvider = ({ children }) => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
-  const login = (token) => {
+  const login = (data) => {
+    let userData;
     try {
-      const decodedToken = jwtDecode(token);
-      const userData = {
-        name: decodedToken.name,
-        email: decodedToken.email,
-        picture: decodedToken.picture, // Assuming the token has a picture URL
-      };
+      if (typeof data === 'string') {
+        // Google JWT token
+        const decodedToken = jwtDecode(data);
+        userData = {
+          name: decodedToken.name,
+          email: decodedToken.email,
+          picture: decodedToken.picture,
+        };
+      } else if (typeof data === 'object' && data !== null) {
+        // Facebook user object
+        userData = {
+          name: data.name,
+          email: data.email,
+          picture: data.picture,
+        };
+      } else {
+        throw new Error('Invalid login data format');
+      }
+
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
     } catch (error) {
-      console.error('Failed to decode JWT:', error);
-      // Handle the error appropriately, e.g., show an error message
+      console.error('Failed to process login data:', error);
     }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    console.log('You have been logged out successfully.');
+
   };
 
   return (
@@ -50,3 +63,4 @@ export const useAuth = () => {
   }
   return context;
 };
+
