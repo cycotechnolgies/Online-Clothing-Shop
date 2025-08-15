@@ -42,18 +42,16 @@ const LoginView = () => {
 
   return (
     <div className="lg:flex lg:items-center lg:justify-content-between lg:mx-auto lg:w-250 bg-gray-100 lg:mt-8 rounded-4xl">
+      {/* Left side image */}
       <div className="lg:ml-20 bg-linear-to-t from-cyan-500 to-blue-500 rounded-4xl hidden mx-auto h-100 w-100 lg:flex">
         <img src={image} alt="Your Company" />
       </div>
 
+      {/* Right side login form */}
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 lg:w-150">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex items-center justify-center gap-x-2">
-            <img
-              src={cart}
-              alt="Your Company"
-              className="h-10 w-auto bg-blue-600 rounded-full p-2"
-            />
+            <img src={cart} alt="Your Company" className="h-10 w-auto bg-blue-600 rounded-full p-2" />
             <p className="font-bold">DN spurt</p>
           </div>
           <h2 className="mt-4 text-center text-3xl/9 font-bold tracking-tight text-gray-900">
@@ -66,11 +64,9 @@ const LoginView = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6">
+            {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-900"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
@@ -85,19 +81,14 @@ const LoginView = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-900"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                   Password
                 </label>
                 <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
+                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
                     Forgot password?
                   </a>
                 </div>
@@ -114,6 +105,7 @@ const LoginView = () => {
               </div>
             </div>
 
+            {/* Sign In Button */}
             <div>
               <button
                 type="submit"
@@ -124,12 +116,14 @@ const LoginView = () => {
             </div>
           </form>
 
+          {/* Social login divider */}
           <p className="mt-6 text-center text-sm text-gray-400 flex items-center">
             <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
             Or Login With
             <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
           </p>
 
+          {/* Social login buttons */}
           <div className="mt-6 flex items-center justify-center gap-x-6 lg:justify-center">
             {/* Google Login */}
             <GoogleLogin
@@ -175,12 +169,10 @@ const LoginView = () => {
             />
           </div>
 
+          {/* Signup link */}
           <p className="mt-10 text-center text-sm text-gray-400">
             Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="font-medium text-indigo-600 hover:underline"
-            >
+            <Link to="/signup" className="font-medium text-indigo-600 hover:underline">
               Sign Up
             </Link>
           </p>

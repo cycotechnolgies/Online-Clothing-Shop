@@ -7,38 +7,40 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Check local storage on component mount
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
 
-
   const login = (data) => {
     let userData;
-    if (typeof data === 'string') {
-      // Google JWT token
-      try {
+    try {
+      if (typeof data === 'string') {
+        // Google JWT token
         const decodedToken = jwtDecode(data);
         userData = {
           name: decodedToken.name,
           email: decodedToken.email,
           picture: decodedToken.picture,
         };
-      } catch (error) {
-        console.error('Failed to decode JWT:', error);
-        return;
+      } else if (typeof data === 'object' && data !== null) {
+        // Facebook user object
+        userData = {
+          name: data.name,
+          email: data.email,
+          picture: data.picture,
+        };
+      } else {
+        throw new Error('Invalid login data format');
       }
-    } else if (typeof data === 'object' && data !== null) {
-      // Facebook user object
-      userData = {
-        name: data.name,
-        email: data.email,
-        picture: data.picture,
-      };
+
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Failed to process login data:', error);
     }
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
