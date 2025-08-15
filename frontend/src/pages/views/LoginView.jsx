@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import FacebookLogin from "@greatsumini/react-facebook-login";
 
+
 import { useAuth } from "../../context/AuthContext";
 import image from "../../assets/image.png";
 import cart from "../../assets/cart.svg";
