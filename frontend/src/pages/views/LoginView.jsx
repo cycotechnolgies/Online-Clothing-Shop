@@ -42,6 +42,7 @@ const LoginView = () => {
 
   return (
     <div className="lg:flex lg:items-center lg:justify-content-between lg:mx-auto lg:w-250 bg-gray-100 lg:mt-8 rounded-4xl">
+
       {/* Left side image */}
       <div className="lg:ml-20 bg-linear-to-t from-cyan-500 to-blue-500 rounded-4xl hidden mx-auto h-100 w-100 lg:flex">
         <img src={image} alt="Your Company" />

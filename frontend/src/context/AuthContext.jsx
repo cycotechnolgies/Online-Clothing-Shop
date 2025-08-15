@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
   const login = (data) => {
     let userData;
     try {
@@ -47,6 +46,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('user');
     console.log('You have been logged out successfully.');
+
   };
 
   return (
@@ -63,3 +63,4 @@ export const useAuth = () => {
   }
   return context;
 };
+
