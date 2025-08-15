@@ -9,13 +9,12 @@ const authRoutes = require('./routes/auth');
 const app = express();
 
 //use CORS middleware
-app.use(cors(
-    {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        credentials: true,
-    }
-));
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 //middleware to parse JSON
 app.use(express.json());

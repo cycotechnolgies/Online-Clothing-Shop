@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { isBlacklisted } = require('../controller/authController');
+const tokenBlacklist = require('../utils/tokenBlacklist');
 
 module.exports = function requireAuth(req, res, next) {
   const token =
@@ -8,7 +8,7 @@ module.exports = function requireAuth(req, res, next) {
       : null;
 
   if (!token) return res.status(401).json({ message: 'Unauthorized' });
-  if (isBlacklisted(token)) return res.status(403).json({ message: 'Token is blacklisted' });
+  if (tokenBlacklist.has(token)) return res.status(403).json({ message: 'Token is blacklisted' });
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);

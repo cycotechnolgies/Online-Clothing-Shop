@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/userModel'); // <-- keep this path in sync with your folder name
-
-// simple in-memory blacklist (resets on server restart)
-const blacklistedTokens = new Set();
+const tokenBlacklist = require('../utils/tokenBlacklist');
 
 const sign = (u) =>
   jwt.sign(
@@ -16,17 +14,10 @@ exports.register = async (req, res) => {
   try {
     const { firstName, lastName, email, password, userType, userId } = req.body;
 
-    // normalize email to match your pre-save logic
-    const normEmail = email?.toLowerCase().trim();
-
-    // quick duplicate check (DB unique index will also enforce)
-    const exists = await User.findOne({ email: normEmail });
-    if (exists) return res.status(409).json({ message: 'Email already registered' });
-
     const user = new User({
       firstName,
       lastName,
-      email: normEmail,
+      email,
       password,           // will be hashed by pre('save')
       userType,           // optional; defaults to "User" if omitted
       userId              // optional custom id
@@ -47,8 +38,7 @@ exports.register = async (req, res) => {
 // POST /api/auth/login
 exports.login = async (req, res) => {
   try {
-    const email = req.body.email?.toLowerCase().trim();
-    const { password } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'User not found' });
@@ -80,23 +70,9 @@ exports.logoutUser = (req, res) => {
 
   try {
     jwt.verify(token, process.env.JWT_SECRET);
-    blacklistedTokens.add(token);
+    tokenBlacklist.add(token);
     return res.status(200).json({ message: 'Logged out successfully' });
   } catch {
     return res.status(400).json({ message: 'Invalid token' });
-  }
-};
-
-// Middleware to protect routes
-exports.verifyToken = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Unauthorized' });
-  if (blacklistedTokens.has(token)) return res.status(403).json({ message: 'Token is blacklisted' });
-
-  try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    return next();
-  } catch {
-    return res.status(403).json({ message: 'Invalid token' });
   }
 };
