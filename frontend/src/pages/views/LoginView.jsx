@@ -1,22 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "@greatsumini/react-facebook-login";
-
-
 import { useAuth } from "../../context/AuthContext";
-import image from "../../assets/image.png";
-import cart from "../../assets/cart.svg";
+import image from "../../assets/Login_Image.jpg"; 
+import logo from "../../assets/OLLY LOGO.png"; 
 import google from "../../assets/google.svg";
 import facebook from "../../assets/facebook.svg";
-
-const FACEBOOK_APP_ID = "736106909310247"; // Replace with your real Facebook App ID
 
 const LoginView = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Facebook login handler with improved error handling
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      // Simulate login API call (replace with actual auth logic)
+      await login({ email, password, rememberMe });
+      navigate("/");
+    } catch (err) {
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Facebook login handler
   const handleFacebookResponse = async (response) => {
     try {
       if (!response.accessToken) throw new Error("No access token from Facebook");
@@ -33,151 +49,147 @@ const LoginView = () => {
         email: data.email,
         picture: data.picture?.data?.url,
       });
-
-      console.log("Facebook login successful!", data);
       navigate("/");
     } catch (error) {
-      console.error("Facebook login error:", error.message);
+      setError("Facebook login failed. Please try again.");
+    }
+  };
+
+  // Google login success handler
+  const handleGoogleSuccess = (credentialResponse) => {
+    try {
+      login(credentialResponse.credential);
+      navigate("/");
+    } catch (error) {
+      setError("Google login failed. Please try again.");
     }
   };
 
   return (
-    <div className="lg:flex lg:items-center lg:justify-content-between lg:mx-auto lg:w-250 bg-gray-100 lg:mt-8 rounded-4xl">
-
-      {/* Left side image */}
-      <div className="lg:ml-20 bg-linear-to-t from-cyan-500 to-blue-500 rounded-4xl hidden mx-auto h-100 w-100 lg:flex">
-        <img src={image} alt="Your Company" />
-      </div>
-
-      {/* Right side login form */}
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 lg:w-150">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="flex items-center justify-center gap-x-2">
-            <img src={cart} alt="Your Company" className="h-10 w-auto bg-blue-600 rounded-full p-2" />
-            <p className="font-bold">DN spurt</p>
-          </div>
-          <h2 className="mt-4 text-center text-3xl/9 font-bold tracking-tight text-gray-900">
-            Welcome back
-          </h2>
-          <p className="mt-1 text-center text-sm font-semibold tracking-tight text-gray-400">
-            Please login to your account
-          </p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl lg:flex">
+        {/* Left side: Hero image for larger screens */}
+        <div className="hidden lg:block lg:w-1/2">
+          <img
+            src={image}
+            alt="Fashion Collection"
+            className="h-full w-full object-cover"
+          />
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6">
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                Email address
-              </label>
-              <div className="mt-2">
+        {/* Right side: Login form */}
+        <div className="w-full p-8 lg:w-1/2 lg:p-12">
+          <div className="mx-auto max-w-sm">
+            <div className="flex items-center justify-center gap-2">
+              <img src={logo} alt="logo" className="h-18 w-auto" />
+            </div>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Welcome Back
+            </h2>
+
+            {error && (
+              <div className="mt-4 rounded-md bg-red-50 p-4 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email address
+                </label>
                 <input
                   id="email"
                   type="email"
-                  name="email"
                   required
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
-            </div>
 
-            {/* Password */}
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+              {/* Password */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
                 <input
                   id="password"
                   type="password"
-                  name="password"
                   required
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
                 />
+              </div>
+
+              {/* Remember Me and Forgot Password */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <div className="flex items-center">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
+                    Remember me
+                  </label>
+                </div>
+                <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  Forgot password?
+                </a>
+              </div>
+
+              {/* Sign In Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex w-full justify-center rounded-lg bg-black px-3 py-3 text-base font-bold text-white shadow-sm hover:bg-gray-800  disabled:opacity-50"
+              >
+                {loading ? "Signing in..." : "Sign in"}
+              </button>
+            </form>
+
+            {/* Social login divider */}
+            <div className="relative mt-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">Or continue with</span>
               </div>
             </div>
 
-            {/* Sign In Button */}
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold text-white shadow-xs"
-              >
-                Sign in
-              </button>
+            {/* Social login buttons */}
+            <div className="mt-6 flex flex-col gap-4 justify-center items-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError("Google login failed.")}
+                useOneTap
+                render={(renderProps) => (
+                  <button
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled || loading}
+                    className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-3 text-base font-semibold text-gray-800 shadow-md hover:from-indigo-100 hover:to-blue-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                  >
+                    <img src={google} alt="Google" className="mr-3 h-6 w-6" />
+                    Sign in with Google
+                  </button>
+                )}
+              />
             </div>
-          </form>
 
-          {/* Social login divider */}
-          <p className="mt-6 text-center text-sm text-gray-400 flex items-center">
-            <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
-            Or Login With
-            <hr className="w-20 border-t-2 border-gray-300 mx-auto" />
-          </p>
-
-          {/* Social login buttons */}
-          <div className="mt-6 flex items-center justify-center gap-x-6 lg:justify-center">
-            {/* Google Login */}
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                try {
-                  login(credentialResponse.credential);
-                  console.log("Google login successful!");
-                  navigate("/");
-                } catch (error) {
-                  console.error("Google login error:", error.message);
-                }
-              }}
-              onError={() => console.error("Google login failed")}
-              useOneTap
-              render={(renderProps) => (
-                <button
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  className="flex w-full justify-center rounded-md bg-white px-1 py-1.5 text-sm font-semibold text-black shadow-xs items-center gap-x-2"
-                  type="button"
-                >
-                  <img src={google} className="h-4 w-auto" alt="Google" />
-                  Google
-                </button>
-              )}
-            />
-
-            {/* Facebook Login */}
-            <FacebookLogin
-              appId={FACEBOOK_APP_ID}
-              onSuccess={handleFacebookResponse}
-              onFail={() => console.error("Facebook login failed")}
-              render={({ onClick }) => (
-                <button
-                  type="button"
-                  onClick={onClick}
-                  className="flex w-full justify-center rounded-md bg-white px-1 py-1.5 text-sm font-semibold text-black shadow-xs items-center gap-x-2"
-                >
-                  <img src={facebook} className="h-4 w-auto" alt="Facebook" />
-                  Facebook
-                </button>
-              )}
-            />
+            {/* Signup link */}
+            <p className="mt-6 text-center text-sm text-gray-600">
+              New to OLLY Clothing?{" "}
+              <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Create an account
+              </Link>
+            </p>
           </div>
-
-          {/* Signup link */}
-          <p className="mt-10 text-center text-sm text-gray-400">
-            Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:underline">
-              Sign Up
-            </Link>
-          </p>
         </div>
       </div>
     </div>
