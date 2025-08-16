@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-import image from '../../assets/image.png'
-import { Link } from "react-router-dom";
-
-import cart from '../../assets/cart.svg'
-import google from '../../assets/google.svg'
-import facebook from '../../assets/facebook.svg'
-import logo from '../../assets/OLLY LOGO.png'
-
-=======
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
@@ -22,7 +11,6 @@ import google from "../../assets/google.svg";
 import facebook from "../../assets/facebook.svg";
 
 const FACEBOOK_APP_ID = "736106909310247"; // Replace with your real Facebook App ID
->>>>>>> f08ee009b89de65847a647cf51831dfc963e6378
 
 const LoginView = () => {
   const navigate = useNavigate();
@@ -183,23 +171,6 @@ const LoginView = () => {
             />
           </div>
 
-<<<<<<< HEAD
-    <p class="mt-10 text-center text-sm/6 text-gray-400">
-      Don't have an account?
-      {/* <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500"> Sign Up</a> */}
-      <Link to="/signup" className="font-medium text-indigo-600 hover:underline">
-                  Sign Up
-      </Link>
-    </p>
-  </div>
-</div>
-
-
-
-
-
-
-=======
           {/* Signup link */}
           <p className="mt-10 text-center text-sm text-gray-400">
             Don't have an account?{" "}
@@ -209,7 +180,6 @@ const LoginView = () => {
           </p>
         </div>
       </div>
->>>>>>> f08ee009b89de65847a647cf51831dfc963e6378
     </div>
   );
 };
