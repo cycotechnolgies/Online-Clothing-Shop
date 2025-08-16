@@ -1,18 +1,18 @@
+// userModel.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs"); 
-
 
 const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
-  email: { type: String, required: true, unique: true },
+  username:  { type: String, required: true, unique: true, index: true, lowercase: true, trim: true, minlength: 3 },
+  email: { type: String, required: true, unique: true }, // (kept as-is; email is normalized in pre-save)
   password: { type: String, required: true },
   userType: { type: String, enum: ["User", "Admin", "Vendor"], default: "User" },
 }, {
   timestamps: true,
   collection: "users"
 });
-
 
 userSchema.add({
   userId: { type: String, unique: true, sparse: true } // optional custom id
@@ -33,6 +33,5 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
-// --- end additions ---
 
 module.exports = mongoose.models.User || mongoose.model("User", userSchema);
