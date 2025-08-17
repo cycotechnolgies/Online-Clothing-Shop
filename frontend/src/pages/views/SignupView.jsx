@@ -9,6 +9,7 @@ import SignupImage from "../../assets/Signup_Img.jpg";
 import google from "../../assets/google.svg";
 import logo from "../../assets/OLLY LOGO.png"; 
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 // [ADDED] Base URL for API (falls back to localhost if env not set)
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -44,45 +45,18 @@ export default function SignupView() {
     };
 
     try {
-      // [REMOVED] Simulated API call:
-      // await new Promise((resolve) => setTimeout(resolve, 700));
+      // Axios API call
+      const res = await axios.post(`${API_URL}/api/auth/register`, payload);
 
-      // [ADDED] Real API call to backend
-      const res = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      let data = null;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        try {
-          data = await res.json();
-        } catch (jsonErr) {
-          setFormError("root", { message: "Invalid server response." });
-          setError("Invalid server response.");
-          toast.error("Invalid server response.");
-          setLoading(false);
-          return;
-        }
-      }
-
-      if (!res.ok) {
-        const msg = data?.message || "Registration failed";
-        setFormError("root", { message: msg });
-        setError(msg);
-        toast.error(msg);
-        return;
-      }
-
+      // Success
       toast.success("Account created! Redirecting to login...");
-      // [CHANGED] immediate navigate; keep structure/flow the same
       setTimeout(() => navigate("/login"), 800);
-    } catch (e) {
-      setFormError("root", { message: "Network error. Please try again." });
-      setError("Network error. Please try again.");
-      toast.error("Network error. Please try again.");
+
+    } catch (err) {
+      const msg = err.response?.data?.message || "Registration failed";
+      setFormError("root", { message: msg });
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
