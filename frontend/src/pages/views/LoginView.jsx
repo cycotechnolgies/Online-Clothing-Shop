@@ -6,6 +6,7 @@ import image from "../../assets/Login_Image.jpg";
 import logo from "../../assets/OLLY LOGO.png"; 
 import google from "../../assets/google.svg";
 import facebook from "../../assets/facebook.svg";
+import axios from "axios";
 
 const LoginView = () => {
   const navigate = useNavigate();
@@ -32,28 +33,30 @@ const LoginView = () => {
     }
   };
 
-  // Facebook login handler
-  const handleFacebookResponse = async (response) => {
-    try {
-      if (!response.accessToken) throw new Error("No access token from Facebook");
+  // Facebook login handler (Axios version)
+const handleFacebookResponse = async (response) => {
+  try {
+    if (!response.accessToken) throw new Error("No access token from Facebook");
 
-      const res = await fetch(
-        `https://graph.facebook.com/me?fields=name,email,picture&access_token=${response.accessToken}`
-      );
+    // Axios GET request to Facebook Graph API
+    const res = await axios.get("https://graph.facebook.com/me", {
+      params: {
+        fields: "name,email,picture",
+        access_token: response.accessToken,
+      },
+    });
 
-      if (!res.ok) throw new Error("Failed to fetch user info from Facebook");
+    login({
+      name: res.data.name,
+      email: res.data.email,
+      picture: res.data.picture?.data?.url,
+    });
+    navigate("/");
+  } catch (error) {
+    setError("Facebook login failed. Please try again.");
+  }
+};
 
-      const data = await res.json();
-      login({
-        name: data.name,
-        email: data.email,
-        picture: data.picture?.data?.url,
-      });
-      navigate("/");
-    } catch (error) {
-      setError("Facebook login failed. Please try again.");
-    }
-  };
 
   // Google login success handler
   const handleGoogleSuccess = (credentialResponse) => {
