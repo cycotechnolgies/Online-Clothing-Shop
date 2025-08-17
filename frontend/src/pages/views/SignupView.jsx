@@ -54,7 +54,19 @@ export default function SignupView() {
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json().catch(() => ({}));
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        try {
+          data = await res.json();
+        } catch (jsonErr) {
+          setFormError("root", { message: "Invalid server response." });
+          setError("Invalid server response.");
+          toast.error("Invalid server response.");
+          setLoading(false);
+          return;
+        }
+      }
 
       if (!res.ok) {
         const msg = data?.message || "Registration failed";
