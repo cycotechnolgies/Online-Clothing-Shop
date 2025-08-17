@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.1",
     "@react-oauth/google": "^0.12.2",
     "@tailwindcss/vite": "^4.1.11",
+    "axios": "^1.11.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.1",

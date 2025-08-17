@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaEye } from "react-icons/fa";
+import axios from "axios";
 
 
 // Local image imports
@@ -116,9 +117,13 @@ const FeaturedProducts = () => {
       try {
         setLoading(true);
         setError("");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setProducts(dummyProducts);
+
+        // ✅ Axios call to backend
+        const res = await axios.get(`${API_URL}/api/products`);
+        setProducts(res.data);
+
       } catch (err) {
+        console.error("Error fetching products:", err);
         setError("Failed to load products. Please try again later.");
       } finally {
         setLoading(false);
@@ -135,14 +140,15 @@ const FeaturedProducts = () => {
           Featured Products
         </h2>
 
-
         {loading && (
           <div className="flex justify-center items-center h-40">
             <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
 
-        {error && <div className="text-center text-red-500 font-medium py-4">{error}</div>}
+        {error && (
+          <div className="text-center text-red-500 font-medium py-4">{error}</div>
+        )}
 
         {!loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

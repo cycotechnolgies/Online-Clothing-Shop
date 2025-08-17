@@ -9,6 +9,7 @@ import SignupImage from "../../assets/Signup_Img.jpg";
 import google from "../../assets/google.svg";
 import logo from "../../assets/OLLY LOGO.png"; 
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 // [ADDED] Base URL for API (falls back to localhost if env not set)
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -31,62 +32,43 @@ export default function SignupView() {
 
   // Handle form submission
   async function onSubmit(values) {
-    clearErrors("root");
-    setError(null);
-    setLoading(true);
+  clearErrors("root");
+  setError(null);
+  setLoading(true);
 
-    const payload = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      username: values.username,
-      email: values.email,
-      password: values.password,
-    };
+  const payload = {
+    firstName: values.firstName,
+    lastName: values.lastName,
+    username: values.username,
+    email: values.email,
+    password: values.password,
+  };
 
-    try {
-      // [REMOVED] Simulated API call:
-      // await new Promise((resolve) => setTimeout(resolve, 700));
+  try {
+    // [ADDED] Real API call with Axios
+    const res = await axios.post(`${API_URL}/api/auth/register`, payload);
 
-      // [ADDED] Real API call to backend
-      const res = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    // ✅ Success case
+    toast.success("Account created! Redirecting to login...");
+    setTimeout(() => navigate("/login"), 800);
 
-      let data = null;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        try {
-          data = await res.json();
-        } catch (jsonErr) {
-          setFormError("root", { message: "Invalid server response." });
-          setError("Invalid server response.");
-          toast.error("Invalid server response.");
-          setLoading(false);
-          return;
-        }
-      }
-
-      if (!res.ok) {
-        const msg = data?.message || "Registration failed";
-        setFormError("root", { message: msg });
-        setError(msg);
-        toast.error(msg);
-        return;
-      }
-
-      toast.success("Account created! Redirecting to login...");
-      // [CHANGED] immediate navigate; keep structure/flow the same
-      setTimeout(() => navigate("/login"), 800);
-    } catch (e) {
+  } catch (err) {
+    // Axios gives error details in err.response (if server responded)
+    if (err.response) {
+      const msg = err.response.data?.message || "Registration failed";
+      setFormError("root", { message: msg });
+      setError(msg);
+      toast.error(msg);
+    } else {
+      // Network / unexpected error
       setFormError("root", { message: "Network error. Please try again." });
       setError("Network error. Please try again.");
       toast.error("Network error. Please try again.");
-    } finally {
-      setLoading(false);
     }
+  } finally {
+    setLoading(false);
   }
+}
 
   // Google login success handler
   const handleGoogleSuccess = (credentialResponse) => {

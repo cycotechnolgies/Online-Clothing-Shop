@@ -6,6 +6,7 @@ import image from "../../assets/Login_Image.jpg";
 import logo from "../../assets/OLLY LOGO.png"; 
 import google from "../../assets/google.svg";
 import facebook from "../../assets/facebook.svg";
+import axios from "axios";
 
 const LoginView = () => {
   const navigate = useNavigate();
@@ -34,32 +35,35 @@ const LoginView = () => {
 
   // Facebook login handler
   const handleFacebookResponse = async (response) => {
-    try {
-      if (!response.accessToken) throw new Error("No access token from Facebook");
+  try {
+    if (!response.accessToken) throw new Error("No access token from Facebook");
 
-      const res = await fetch(
-        `https://graph.facebook.com/me?fields=name,email,picture&access_token=${response.accessToken}`
-      );
+    // ✅ Axios GET request
+    const res = await axios.get(
+      `https://graph.facebook.com/me?fields=name,email,picture&access_token=${response.accessToken}`
+    );
 
-      if (!res.ok) throw new Error("Failed to fetch user info from Facebook");
+    // Axios automatically parses JSON
+    const data = res.data;
 
-      const data = await res.json();
-      login({
-        name: data.name,
-        email: data.email,
-        picture: data.picture?.data?.url,
-      });
-      navigate("/");
-    } catch (error) {
-      setError("Facebook login failed. Please try again.");
-    }
-  };
+    login({
+      name: data.name,
+      email: data.email,
+      picture: data.picture?.data?.url,
+    });
 
-  // Google login success handler
-  const handleGoogleSuccess = (credentialResponse) => {
-    try {
-      login(credentialResponse.credential);
-      navigate("/");
+    navigate("/");
+  } catch (error) {
+    console.error("Facebook login error:", error);
+    setError("Facebook login failed. Please try again.");
+  }
+};
+
+// Google login success handler
+const handleGoogleSuccess = (credentialResponse) => {
+  try {
+    login(credentialResponse.credential);
+    navigate("/");
     } catch (error) {
       setError("Google login failed. Please try again.");
     }
