@@ -1,20 +1,39 @@
-import { useState } from 'react'
-import './App.css'
+// src/App.jsx
+import { Routes, Route, Outlet } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "./context/AuthContext";
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+// pages
+import LoginView from "./pages/views/LoginView";
+import HomeView from "./pages/views/HomeView";
+import SignupView from "./pages/views/SignupView";
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+// A layout component without the Header
+const AppLayout = () => {
   return (
     <>
-      <h1 className='text-3xl font-bold underline text-center mt-10'>
-        Online-Clothing-Shop
-      </h1>
-      <button
-        onClick={() => setCount(count + 1)}
-        className='px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300'
-      >click me</button>
+      <Outlet />
     </>
-  )
+  );
+};
+
+function App() {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<HomeView />} />
+            <Route path="login" element={<LoginView />} />
+            <Route path="signup" element={<SignupView />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </GoogleOAuthProvider>
+  );
 }
 
-export default App
+export default App;
