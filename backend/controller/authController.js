@@ -1,3 +1,4 @@
+// authController.js
 const jwt = require('jsonwebtoken');
 const User = require('../model/userModel'); // <-- keep this path in sync with your folder name
 
@@ -14,18 +15,38 @@ const sign = (u) =>
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, userType, userId } = req.body;
+    // [CHANGED] include username in destructure
+    const { firstName, lastName, username, email, password, userType, userId } = req.body;
 
     // normalize email to match your pre-save logic
     const normEmail = email?.toLowerCase().trim();
+    // [ADDED] normalize username to match schema (lowercase/trim)
+    const normUsername = username?.toLowerCase().trim();
 
-    // quick duplicate check (DB unique index will also enforce)
-    const exists = await User.findOne({ email: normEmail });
-    if (exists) return res.status(409).json({ message: 'Email already registered' });
+    // [ADDED] basic required checks (username/email/password are required by schema)
+    if (!normUsername || !normEmail || !password) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+    // [ADDED] username length validation (must match schema's minlength)
+    if (normUsername.length < 3) {
+      return res.status(400).json({ message: 'Username must be at least 3 characters long' });
+    }
+
+    // [CHANGED] duplicate check by email OR username
+    const exists = await User.findOne({
+      $or: [{ email: normEmail }, { username: normUsername }]
+    });
+    if (exists) {
+      // [ADDED] precise message for which field conflicts
+      const field = exists.email === normEmail ? 'Email' : 'Username';
+      return res.status(409).json({ message: `${field} already registered` });
+    }
 
     const user = new User({
       firstName,
       lastName,
+      // [ADDED] include normalized username
+      username: normUsername,
       email: normEmail,
       password,           // will be hashed by pre('save')
       userType,           // optional; defaults to "User" if omitted
@@ -36,8 +57,10 @@ exports.register = async (req, res) => {
     return res.status(201).json({ ok: true, id: user._id });
   } catch (e) {
     // duplicate key safety
-    if (e?.code === 11000 && e?.keyPattern?.email) {
-      return res.status(409).json({ message: 'Email already registered' });
+    if (e?.code === 11000) {
+      // [CHANGED] handle username AND email unique index conflicts
+      if (e?.keyPattern?.email) return res.status(409).json({ message: 'Email already registered' });
+      if (e?.keyPattern?.username) return res.status(409).json({ message: 'Username already registered' });
     }
     console.error(e);
     return res.status(500).json({ message: 'Registration failed' });

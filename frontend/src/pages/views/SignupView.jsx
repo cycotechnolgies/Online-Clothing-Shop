@@ -1,3 +1,4 @@
+// SignupView.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
@@ -8,6 +9,9 @@ import SignupImage from "../../assets/Signup_Img.jpg";
 import google from "../../assets/google.svg";
 import logo from "../../assets/OLLY LOGO.png"; 
 import toast, { Toaster } from "react-hot-toast";
+
+// [ADDED] Base URL for API (falls back to localhost if env not set)
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function SignupView() {
   const navigate = useNavigate();
@@ -40,10 +44,41 @@ export default function SignupView() {
     };
 
     try {
-      // Simulate API call (replace with real API call)
-      await new Promise((resolve) => setTimeout(resolve, 700));
+      // [REMOVED] Simulated API call:
+      // await new Promise((resolve) => setTimeout(resolve, 700));
+
+      // [ADDED] Real API call to backend
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        try {
+          data = await res.json();
+        } catch (jsonErr) {
+          setFormError("root", { message: "Invalid server response." });
+          setError("Invalid server response.");
+          toast.error("Invalid server response.");
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (!res.ok) {
+        const msg = data?.message || "Registration failed";
+        setFormError("root", { message: msg });
+        setError(msg);
+        toast.error(msg);
+        return;
+      }
+
       toast.success("Account created! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 1000);
+      // [CHANGED] immediate navigate; keep structure/flow the same
+      setTimeout(() => navigate("/login"), 800);
     } catch (e) {
       setFormError("root", { message: "Network error. Please try again." });
       setError("Network error. Please try again.");
@@ -135,7 +170,7 @@ export default function SignupView() {
               </div>
 
               {/* Username */}
-              {/* <div>
+              <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                   Username
                 </label>
@@ -149,7 +184,7 @@ export default function SignupView() {
                 {errors.username && (
                   <p className="mt-1 text-xs text-red-600">{errors.username.message}</p>
                 )}
-              </div> */}
+              </div>
 
               {/* Email */}
               <div>
