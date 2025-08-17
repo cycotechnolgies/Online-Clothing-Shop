@@ -27,6 +27,10 @@ exports.register = async (req, res) => {
     if (!normUsername || !normEmail || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
+    // [ADDED] username length validation (must match schema's minlength)
+    if (normUsername.length < 3) {
+      return res.status(400).json({ message: 'Username must be at least 3 characters long' });
+    }
 
     // [CHANGED] duplicate check by email OR username
     const exists = await User.findOne({
