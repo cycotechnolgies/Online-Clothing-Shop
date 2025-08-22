@@ -8,6 +8,7 @@ import './App.css';
 import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
 import SignupView from "./pages/views/SignupView";
+import Cartview from "./pages/views/CartView";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -29,6 +30,7 @@ function App() {
             <Route index element={<HomeView />} />
             <Route path="login" element={<LoginView />} />
             <Route path="signup" element={<SignupView />} />
+            <Route path="cart" element={<Cartview/>} />
           </Route>
         </Routes>
       </AuthProvider>
