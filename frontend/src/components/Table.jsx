@@ -1,4 +1,3 @@
-
 import bin from '../assets/bin.svg'
 import arrow from '../assets/l-arrow.svg'
 import refresh from '../assets/refresh.svg'
@@ -16,7 +15,7 @@ const Table = () => {
   const increase = () => {
     setQuantity((prev) => prev + 1);
   };
-
+  
   return (
     <div>
       
@@ -24,13 +23,13 @@ const Table = () => {
         <table className="w-full min-w-[600px]">
           <thead>
             <tr>
+
               <th className=" border-b border-gray-300 px-4 py-2 text-left w-1/2 text-gray-400 font-normal text-sm">
                 PRODUCT
               </th>
               <th className="hidden md:table-cell border-b border-gray-300 px-4 py-2 text-left text-gray-400 font-normal text-sm">
                 PRICE
               </th>
-
               <th className="border-b border-gray-300 px-4 py-2 text-left text-gray-400 font-normal text-sm">
                 QUANTITY
               </th>
@@ -41,6 +40,7 @@ const Table = () => {
           </thead>
           <tbody>
             <tr>
+
               <td className="border-b-0 md:border-b md:border-gray-300 px-4 py-5 w-1/2">
                 <div className="flex items-center gap-3">
                   <button className="cursor-pointer">
@@ -58,7 +58,6 @@ const Table = () => {
                     
 
                   </div>
-                  
 
                   <div className="text-xs sm:text-sm">
                     <a href="#" className="block">
