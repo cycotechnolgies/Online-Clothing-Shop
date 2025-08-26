@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route, Outlet } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./context/AuthContext";
@@ -8,6 +7,7 @@ import './App.css';
 import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
 import SignupView from "./pages/views/SignupView";
+import CheckoutView from "./pages/views/CheckoutView"; 
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -29,6 +29,7 @@ function App() {
             <Route index element={<HomeView />} />
             <Route path="login" element={<LoginView />} />
             <Route path="signup" element={<SignupView />} />
+            <Route path="checkout" element={<CheckoutView />} /> 
           </Route>
         </Routes>
       </AuthProvider>
