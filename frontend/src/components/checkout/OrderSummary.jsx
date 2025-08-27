@@ -22,7 +22,10 @@ const items = [
 
 const OrderSummary = ({ shippingPrice = 0 }) => {
   // Calculate total using count, including the shipping price
-  const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
+  const grossTotal = items.reduce(
+    (sum, item) => sum + item.price * item.count,
+    0
+  );
   const netTotal = grossTotal + shippingPrice;
 
   return (
@@ -47,7 +50,9 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
             <p className="text-xs text-gray-500">{item.details}</p>
             <p className="text-sm font-bold mt-1">
               LKR {(item.price * item.count).toLocaleString()}.00{" "}
-              <span className="text-xs text-gray-500 font-normal">(× {item.count})</span>
+              <span className="text-xs text-gray-500 font-normal">
+                (× {item.count})
+              </span>
             </p>
           </div>
         </div>
@@ -87,15 +92,12 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
 
       <div className="flex justify-between font-semibold text-sm mt-4">
         <span className="text-black">Net Total :</span>
-        <span className="text-black">LKR {netTotal.toLocaleString()}.00</span>
+        <span className="text-black">
+          LKR {netTotal.toLocaleString()}.00
+        </span>
       </div>
     </aside>
   );
 };
 
 export default OrderSummary;
-
-
-//added tempory array for deliver placeholders 
-// implemented Calculate gross total based on item price × quantity 
-// Final total includes shipping cost (passed dynamically from ShippingMethod component)
