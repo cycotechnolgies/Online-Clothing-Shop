@@ -21,16 +21,54 @@ const items = [
 ];
 
 const OrderSummary = ({ shippingPrice = 0 }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    phone1: "",
+    phone2: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
   // Calculate total using count, including the shipping price
   const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
   const netTotal = grossTotal + shippingPrice;
+
+  // Validation function for demo purposes
+  const validateForm = () => {
+    const requiredFields = ["email", "firstName", "lastName", "address", "city", "postalCode", "phone1"];
+    let isValid = true;
+    const newErrors = {};
+
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        newErrors[field] = "This field is required";
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handlePayNow = () => {
+    if (validateForm()) {
+      alert("Form is valid, proceed to payment");
+    } else {
+      alert("Please fill all required fields.");
+    }
+  };
 
   return (
     <aside className="bg-white p-6">
       {items.map((item) => (
         <div key={item.id} className="flex items-center gap-4 mb-5">
           {/* Image wrapper with counter badge */}
-          <div className="relative w-[92px] h-[120px] rounded overflow-hidden">
+          <div className="relative w-[70px] h-[90px] rounded overflow-hidden">
             <img
               src={item.image}
               alt={item.name}
@@ -53,14 +91,17 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
         </div>
       ))}
 
-      <input
-        type="text"
-        placeholder="Discount Code or Gift Card"
-        className="w-full border border-gray-300 px-4 py-2 rounded-sm text-sm mb-3"
-      />
-      <button className="bg-yellow-200 text-black font-medium text-sm px-5 py-2 rounded-sm hover:opacity-90">
-        Apply
-      </button>
+      {/* Discount Code Input + Apply Button */}
+      <div className="flex items-center mb-3">
+        <input
+          type="text"
+          placeholder="Discount Code or Gift Card"
+          className="flex-1 border border-gray-300 px-4 py-2 rounded-l-sm text-sm"
+        />
+        <button className="bg-black text-white font-medium text-sm px-5 py-2 rounded-r-sm hover:opacity-90">
+          Apply
+        </button>
+      </div>
 
       <div className="mt-6 space-y-2 text-sm">
         <div className="flex justify-between">
@@ -89,6 +130,15 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
         <span className="text-black">Net Total :</span>
         <span className="text-black">LKR {netTotal.toLocaleString()}.00</span>
       </div>
+
+      {/* Pay Now Button at the end of Order Summary */}
+      <button
+        type="button"
+        className="w-full bg-black text-white py-3 text-sm font-semibold mt-6 hover:opacity-90 transition"
+        onClick={handlePayNow}
+      >
+        Pay Now
+      </button>
     </aside>
   );
 };
