@@ -29,7 +29,12 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition duration-300">
+    <div className="bg-white shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition duration-300"
+      onClick={() => navigate(`/product/${product.id}`)}
+    
+    >
+      
+
       <div className="relative w-full h-[450px] group">
         <img
           src={product.image}
