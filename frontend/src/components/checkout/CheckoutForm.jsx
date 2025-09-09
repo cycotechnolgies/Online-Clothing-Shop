@@ -95,8 +95,6 @@ const CheckoutForm = ({ shippingPrice, setShippingPrice }) => {
 
   return (
     <div className="space-y-6 px-6 max-w-2xl mx-auto">
-      
-
       <div className="h-px bg-gray-200" />
 
       {/* -----------------Contact & Delivery------------------- */}
@@ -133,12 +131,7 @@ const CheckoutForm = ({ shippingPrice, setShippingPrice }) => {
         handleChange={handleChange}
         errors={errors}
       />
-
       <div className="h-px bg-gray-200" />
-
-      
-
-      
     </div>
   );
 };

@@ -10,6 +10,7 @@ import SignupView from "./pages/views/SignupView";
 import CheckoutView from "./pages/views/CheckoutView"; 
 import ProfileView from "./pages/views/ProfileView";
 
+
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 // A layout component without the Header
