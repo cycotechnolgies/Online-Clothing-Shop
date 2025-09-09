@@ -1,4 +1,5 @@
 import denimJacket from "../../assets/denim-jacket.jpeg";
+import { useState } from "react";
 
 const items = [
   {
@@ -23,6 +24,41 @@ const OrderSummary = ({ shippingPrice = 0, formData, errors, validateForm }) => 
   const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
   const netTotal = grossTotal + shippingPrice;
 
+const OrderSummary = ({ shippingPrice = 0 }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    phone1: "",
+    phone2: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // Calculate total using count, including the shipping price
+  const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
+  const netTotal = grossTotal + shippingPrice;
+
+  // Validation function for demo purposes
+  const validateForm = () => {
+    const requiredFields = ["email", "firstName", "lastName", "address", "city", "postalCode", "phone1"];
+    let isValid = true;
+    const newErrors = {};
+
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        newErrors[field] = "This field is required";
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handlePayNow = () => {
     if (validateForm()) {
       alert("Form is valid, proceed to payment");
@@ -45,17 +81,6 @@ const OrderSummary = ({ shippingPrice = 0, formData, errors, validateForm }) => 
               {item.count}
             </span>
           </div>
-
-          <div className="text-sm flex-1">
-            <p className="font-semibold">{item.name}</p>
-            <p className="text-xs text-gray-500">{item.details}</p>
-            <p className="text-sm font-bold mt-1">
-              LKR {(item.price * item.count).toLocaleString()}.00{" "}
-              <span className="text-xs text-gray-500 font-normal">(× {item.count})</span>
-            </p>
-          </div>
-        </div>
-      ))}
 
       <div className="flex items-center mb-3 gap-2">
         <input
