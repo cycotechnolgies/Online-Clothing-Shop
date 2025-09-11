@@ -4,7 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/productRoutes');
 const cartRoute = require('./routes/cartRoute');
+
 
 //express app variable
 const app = express();
@@ -28,6 +30,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 app.use('/api/cart', cartRoute);
 
 mongoose
