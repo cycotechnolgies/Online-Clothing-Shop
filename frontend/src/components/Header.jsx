@@ -64,7 +64,7 @@ const Header = () => {
               {['FROCK', 'BLOUSE', 'SKIRT'].map(item => (
                 <li key={item}>
                   <Link
-                    to={`/clothing/${item.toLowerCase()}`}
+                    to={`/category/${item}`}
                     className="block px-5 py-4 text-[15px] md:text-base text-gray-800 hover:text-white hover:bg-teal-900 rounded-md transition-colors duration-200"
                     onClick={() => setOpenDropdown(null)}
                   >
