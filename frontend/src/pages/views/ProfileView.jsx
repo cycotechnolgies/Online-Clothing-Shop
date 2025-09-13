@@ -4,7 +4,8 @@ import Footer from "../../components/Footer";
 import PersonalInfoForm from "../../components/profile/PersonalInfoForm";
 import LoginPasswordSection from "../../components/profile/LoginPasswordSection";
 import PaymentMethodsSection from "../../components/profile/PaymentMethodsSection";
-import { FaUser, FaLock, FaCreditCard, FaSignOutAlt, FaPen } from "react-icons/fa";
+import OrderHistorySection from "../../components/profile/OrderHistorySection"; // Import the new section
+import { FaUser, FaLock, FaCreditCard, FaSignOutAlt, FaPen, FaBox } from "react-icons/fa";
 
 export default function ProfileView() {
   // You can hydrate this from your AuthContext or GET /api/me on mount
@@ -98,7 +99,6 @@ export default function ProfileView() {
                 <h3 className="mt-3 text-base font-semibold text-gray-900">
                   {user.firstName} {user.lastName}
                 </h3>
-                {/* <p className="text-sm text-gray-500">{user.role}</p> */}
               </div>
 
               <nav className="mt-8 space-y-3">
@@ -132,6 +132,17 @@ export default function ProfileView() {
                   <span>Payment Methods</span>
                 </button>
 
+                {/* Add new Order History button here */}
+                <button
+                  onClick={() => setActive("orders")}
+                  className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+                    active === "orders" ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  <FaBox className="text-lg" aria-hidden="true" />
+                  <span>Order History</span>
+                </button>
+
                 <button className="w-full flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-gray-100 text-gray-700">
                   <FaSignOutAlt className="text-lg" aria-hidden="true" />
                   <span>Log Out</span>
@@ -139,7 +150,7 @@ export default function ProfileView() {
               </nav>
             </aside>
 
-            {/* RIGHT: switch among three sections */}
+            {/* RIGHT: switch among four sections */}
             {active === "personal" && (
               <PersonalInfoForm
                 user={user}
@@ -152,6 +163,7 @@ export default function ProfileView() {
             )}
             {active === "security" && <LoginPasswordSection user={user} />}
             {active === "payment" && <PaymentMethodsSection user={user} />}
+            {active === "orders" && <OrderHistorySection />}
           </div>
         </div>
       </main>
