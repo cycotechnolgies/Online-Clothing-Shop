@@ -1,29 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaEye } from "react-icons/fa";
+import dummyProducts from "../data/dummyproducts";
 
 
-// Local image imports
-import tshirt from "../assets/tshirt.jpg";
-import denimJacket from "../assets/denim-jacket.jpeg";
-import frock from "../assets/frock.jpg";
-import summerDress from "../assets/summer-dress.jpg";
-import blouse from "../assets/blouse.jpg";
-import saree from "../assets/saree.jpg";
-import bra from "../assets/bra.jpeg";
-import nighty from "../assets/nighty.jpg";
-
-// Dummy product data with sizes
-const dummyProducts = [
-  { id: 1, name: "Classic White T-Shirt", price: 2000.0, oldPrice: 2500.0, inStock: true, image: tshirt, sizes: ["S", "M", "L", "XL"] },
-  { id: 2, name: "Washed Denim Double Pocket Jacket", price: 4500.0, oldPrice: null, inStock: true, image: denimJacket, sizes: ["S", "M", "L"] },
-  { id: 3, name: "Summer Dress", price: 3000.0, oldPrice: 3500.0, inStock: false, image: summerDress, sizes: ["S", "M", "L"] },
-  { id: 4, name: "Frock", price: 2800.0, oldPrice: null, inStock: true, image: frock, sizes: ["S", "M", "L"] },
-  { id: 5, name: "Saree Blouse", price: 1000.0, oldPrice: null, inStock: true, image: blouse, sizes: ["S", "M", "L", "XL"] },
-  { id: 6, name: "Women's Bra", price: 800.0, oldPrice: 1000.0, inStock: true, image: bra, sizes: ["S", "M", "L"] },
-  { id: 7, name: "Saree", price: 4800.0, oldPrice: null, inStock: false, image: saree, sizes: ["S", "M", "L"] },
-  { id: 8, name: "Women's Night Dress", price: 2800.0, oldPrice: 3100.0, inStock: true, image: nighty, sizes: ["S", "M", "L"] },
-];
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
