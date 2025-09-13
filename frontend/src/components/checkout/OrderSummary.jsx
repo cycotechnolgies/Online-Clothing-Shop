@@ -1,5 +1,5 @@
+import denimJacket from "../../assets/denim-jacket.jpeg";
 import { useState } from "react";
-import denimJacket from "../../assets/denim-jacket.jpeg"; // Import your images here
 
 const items = [
   {
@@ -19,6 +19,10 @@ const items = [
     count: 2,
   },
 ];
+
+const OrderSummary = ({ shippingPrice = 0, formData, errors, validateForm }) => {
+  const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
+  const netTotal = grossTotal + shippingPrice;
 
 const OrderSummary = ({ shippingPrice = 0 }) => {
   const [formData, setFormData] = useState({
@@ -64,10 +68,9 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
   };
 
   return (
-    <aside className="bg-white p-6">
+    <aside className="bg-white p-6 -mt-3">
       {items.map((item) => (
         <div key={item.id} className="flex items-center gap-4 mb-5">
-          {/* Image wrapper with counter badge */}
           <div className="relative w-[70px] h-[90px] rounded overflow-hidden">
             <img
               src={item.image}
@@ -79,26 +82,13 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
             </span>
           </div>
 
-          {/* Details */}
-          <div className="text-sm flex-1">
-            <p className="font-semibold">{item.name}</p>
-            <p className="text-xs text-gray-500">{item.details}</p>
-            <p className="text-sm font-bold mt-1">
-              LKR {(item.price * item.count).toLocaleString()}.00{" "}
-              <span className="text-xs text-gray-500 font-normal">(× {item.count})</span>
-            </p>
-          </div>
-        </div>
-      ))}
-
-      {/* Discount Code Input + Apply Button */}
-      <div className="flex items-center mb-3">
+      <div className="flex items-center mb-3 gap-2">
         <input
           type="text"
           placeholder="Discount Code or Gift Card"
-          className="flex-1 border border-gray-300 px-4 py-2 rounded-l-sm text-sm"
+          className="flex-1 border border-gray-300 px-4 py-2 rounded-md text-sm"
         />
-        <button className="bg-black text-white font-medium text-sm px-5 py-2 rounded-r-sm hover:opacity-90">
+        <button className="bg-black text-white font-medium text-sm px-5 py-2 rounded-md hover:opacity-90">
           Apply
         </button>
       </div>
@@ -131,7 +121,6 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
         <span className="text-black">LKR {netTotal.toLocaleString()}.00</span>
       </div>
 
-      {/* Pay Now Button at the end of Order Summary */}
       <button
         type="button"
         className="w-full bg-black text-white py-3 text-sm font-semibold mt-6 hover:opacity-90 transition"

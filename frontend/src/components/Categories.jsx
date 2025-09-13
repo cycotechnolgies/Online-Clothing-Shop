@@ -6,19 +6,19 @@ const categories = [
     id: 1,
     name: "BLOUSE",
     image: "https://images.pexels.com/photos/794064/pexels-photo-794064.jpeg",
-    link: "/blouse",
+    link: "/category/BLOUSE",
   },
   {
     id: 2,
     name: "SKIRT",
     image: "https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg",
-    link: "/skirt",
+    link: "/category/SKIRT",
   },
   {
     id: 3,
     name: "FROCK",
     image: "https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg",
-    link: "/frock",
+    link: "/category/FROCK",
   },
 ];
 
