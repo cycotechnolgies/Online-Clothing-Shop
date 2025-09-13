@@ -20,10 +20,6 @@ const items = [
   },
 ];
 
-const OrderSummary = ({ shippingPrice = 0, formData, errors, validateForm }) => {
-  const grossTotal = items.reduce((sum, item) => sum + item.price * item.count, 0);
-  const netTotal = grossTotal + shippingPrice;
-
 const OrderSummary = ({ shippingPrice = 0 }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -81,6 +77,15 @@ const OrderSummary = ({ shippingPrice = 0 }) => {
               {item.count}
             </span>
           </div>
+
+          {/* You could add item details here */}
+          <div>
+            <p className="text-sm font-medium">{item.name}</p>
+            <p className="text-xs text-gray-500">{item.details}</p>
+            <p className="text-sm font-semibold">LKR {(item.price * item.count).toLocaleString()}.00</p>
+          </div>
+        </div>
+      ))}
 
       <div className="flex items-center mb-3 gap-2">
         <input
