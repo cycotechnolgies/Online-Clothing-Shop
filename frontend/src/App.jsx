@@ -7,6 +7,9 @@ import './App.css';
 import LoginView from "./pages/views/LoginView";
 import HomeView from "./pages/views/HomeView";
 import SignupView from "./pages/views/SignupView";
+
+import CheckoutView from "./pages/views/CheckoutView";
+import SingleProduct from "./pages/views/SingleProduct";
 import CategoryView from "./pages/views/CategoryView";
 import Cartview from "./pages/views/CartView";
 import CheckoutView from "./pages/views/CheckoutView"; 
@@ -32,6 +35,9 @@ function App() {
             <Route index element={<HomeView />} />
             <Route path="login" element={<LoginView />} />
             <Route path="signup" element={<SignupView />} />
+
+            <Route path="checkout" element={<CheckoutView />} />
+            <Route path="product/:id" element={<SingleProduct />} />
             <Route path="/category/:categoryName" element={<CategoryView />} /> 
             <Route path="cart" element={<Cartview/>} />
             <Route path="checkout" element={<CheckoutView />} />
