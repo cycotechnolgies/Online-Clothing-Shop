@@ -1,11 +1,18 @@
 const express = require("express");
 const router = express.Router();
-
-// Import controller functions using require()
-const { getProductsByCategory, getAllProducts } = require("../controller/productController");
+const {
+  getAllProducts,
+  getProductsByCategory,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} = require("../controller/productController");
 
 // Routes
-router.get("/", getAllProducts); // GET all products
-router.get("/:category", getProductsByCategory); // GET by category
+router.get("/", getAllProducts);
+router.get("/:category", getProductsByCategory);
+router.post("/", createProduct); // Add product
+router.put("/:id", updateProduct); // Update product
+router.delete("/:id", deleteProduct); // Delete product
 
-module.exports = router; // ✅ Export router using CommonJS
+module.exports = router;
