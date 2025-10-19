@@ -53,9 +53,10 @@ const updateOrderStatus = async (req, res) => {
     order.orderStatus = status;
 
     if (status === "Delivered") {
-      order.deliveredAt = Date.now();
-      order.isPaid = true; 
       order.paymentStatus = "Paid"; 
+      order.isPaid = true; 
+      order.paidAt = Date.now();
+      order.deliveredAt = Date.now();
     }
 
     await order.save();
@@ -108,43 +109,61 @@ const refundOrder = async (req, res) => {
 };
 
 
-// @desc   Create a new order
-// @route  POST /api/orders
-// @access User
+// @desc    Create a new order
+// @route   POST /api/orders
+// @access  User (Protected)
 const createOrder = async (req, res) => {
   try {
-    const { items, shippingAddress, paymentMethod, paymentStatus, orderStatus } = req.body;
+    const { items, shippingAddress, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: "No order items" });
+      return res.status(400).json({ message: "No order items provided" });
     }
 
-    // Calculate total amount automatically
+    // Automatically calculate total order amount
     const totalAmount = items.reduce(
       (sum, item) => sum + item.priceAtPurchase * item.quantity,
       0
     );
 
-    const isPaid = paymentStatus === "Paid";
-    
+    // 💳 Determine payment status based on method
+    //  - COD orders are unpaid at creation (Pending)
+    //  - All other methods (Stripe, PayHere, BankTransfer) are treated as Paid
+    let finalPaymentStatus;
+    if (paymentMethod === "COD") {
+      finalPaymentStatus = "Pending";
+    } else {
+      finalPaymentStatus = "Paid";
+    }
+
+    // Mark paid status and timestamp if payment completed
+    const isPaid = finalPaymentStatus === "Paid";
+    const paidAt = isPaid ? Date.now() : null;
+
     const order = new Order({
-      userId: req.user.id,
+      userId: req.user.id,         
       items,
       shippingAddress,
-      paymentMethod: paymentMethod || "COD",
+      paymentMethod,
       totalAmount,
-      paymentStatus: paymentStatus || "Pending",
-      orderStatus,
+      paymentStatus: finalPaymentStatus,
+      orderStatus: "Processing",     
       isPaid,
-      paidAt: isPaid ? Date.now() : null, 
+      paidAt,
     });
 
     const createdOrder = await order.save();
+
     res.status(201).json(createdOrder);
+
   } catch (error) {
-    res.status(500).json({ message: "Error creating order", error: error.message });
+    res.status(500).json({
+      message: "Error creating order",
+      error: error.message,
+    });
   }
 };
+
 
 
 module.exports = {
