@@ -1,4 +1,4 @@
-import { Search, ChevronDown, RefreshCcw, DollarSign, Package, Clock, X, CheckCircle, Truck, TrendingUp, Filter, Users, Calendar } from 'lucide-react';
+import {  RefreshCcw, DollarSign, Package,  Truck, TrendingUp,  Users, Calendar } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 const OrderDetailPanel = ({ order, onUpdateStatus, onProcessRefund }) => {
   if (!order) return (

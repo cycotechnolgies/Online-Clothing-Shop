@@ -1,5 +1,5 @@
 import StatusBadge from './StatusBadge';
-import { Search, ChevronDown, RefreshCcw, DollarSign, Package, Clock, X, CheckCircle, Truck, TrendingUp, Filter, Users, Calendar } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const OrderTable = ({ orders, selectedOrder, setSelectedOrder, requestSort, sortConfig, getClassNamesFor }) => (
     <div className="overflow-x-auto">

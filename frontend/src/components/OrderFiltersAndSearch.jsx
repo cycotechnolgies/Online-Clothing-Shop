@@ -1,4 +1,4 @@
-import { Search, ChevronDown, RefreshCcw, DollarSign, Package, Clock, X, CheckCircle, Truck, TrendingUp, Filter, Users, Calendar } from 'lucide-react';
+import { Search, ChevronDown,  Filter } from 'lucide-react';
 
 const statusOptions = ['All', 'Pending', 'Shipped', 'Delivered', 'Cancelled'];
 
