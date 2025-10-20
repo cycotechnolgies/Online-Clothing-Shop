@@ -53,10 +53,12 @@ const updateOrderStatus = async (req, res) => {
     order.orderStatus = status;
 
     if (status === "Delivered") {
-      order.paymentStatus = "Paid"; 
-      order.isPaid = true; 
-      order.paidAt = Date.now();
       order.deliveredAt = Date.now();
+      if (order.isPaid === false) {
+        order.paymentStatus = "Paid";
+        order.isPaid = true;
+        order.paidAt = Date.now();
+      }
     }
 
     await order.save();
@@ -141,13 +143,13 @@ const createOrder = async (req, res) => {
     const paidAt = isPaid ? Date.now() : null;
 
     const order = new Order({
-      userId: req.user.id,         
+      userId: req.user.id,
       items,
       shippingAddress,
       paymentMethod,
       totalAmount,
       paymentStatus: finalPaymentStatus,
-      orderStatus: "Processing",     
+      orderStatus: "Processing",
       isPaid,
       paidAt,
     });
