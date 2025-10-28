@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Import useEffect
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../../context/AuthContext";
@@ -10,64 +10,72 @@ import axios from "axios";
 
 const LoginView = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  // Get user and loading from context
+  const { login, user, loading } = useAuth(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  
+  // This state is for the form submission, separate from context loading
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+
+  // --- THIS IS THE NEW FIX ---
+  // This hook handles the redirect loop
+  useEffect(() => {
+    // Wait until the AuthContext is done loading the user from localStorage
+    if (loading) {
+      return; 
+    }
+
+    // If we have a user, redirect them
+    if (user) {
+      if (user.userType && user.userType.toLowerCase() === 'admin') {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [user, loading, navigate]); // Re-run when user or loading changes
+  // --- END OF NEW FIX ---
+
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    setLoading(true);
+    setIsSubmitting(true);
     try {
-      // Simulate login API call (replace with actual auth logic)
-      await login({ email, password, rememberMe });
-      navigate("/");
+      // 1. Call login and get the user data back
+      const loggedInUser = await login(email, password); 
+
+      // 2. Check the user's role (case-insensitive)
+      if (loggedInUser.userType && (loggedInUser.userType.toLowerCase() === 'admin')) {
+        // 3. If admin, go to dashboard
+        navigate("/dashboard");
+      } else {
+        // 4. If not admin, go to home page
+        navigate("/");
+      }
+
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      setError(err.response ? err.response.data.message : "Invalid email or password.");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  // Facebook login handler (Axios version)
-const handleFacebookResponse = async (response) => {
-  try {
-    if (!response.accessToken) throw new Error("No access token from Facebook");
-
-    // Axios GET request to Facebook Graph API
-    const res = await axios.get("https://graph.facebook.com/me", {
-      params: {
-        fields: "name,email,picture",
-        access_token: response.accessToken,
-      },
-    });
-
-    login({
-      name: res.data.name,
-      email: res.data.email,
-      picture: res.data.picture?.data?.url,
-    });
-    navigate("/");
-  } catch (error) {
-    setError("Facebook login failed. Please try again.");
+  // Google/Facebook handlers
+  const handleSocialLoginError = () => {
+     setError("Social login is not connected. Please use email and password.");
   }
-};
 
+  // If the context is loading, or we are logged in and redirecting, show nothing
+  if (loading || user) {
+    return <div>Loading...</div>; // Or a spinner
+  }
 
-  // Google login success handler
-  const handleGoogleSuccess = (credentialResponse) => {
-    try {
-      login(credentialResponse.credential);
-      navigate("/");
-    } catch (error) {
-      setError("Google login failed. Please try again.");
-    }
-  };
-
+  // Only show the login form if we are not loading and have no user
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl lg:flex">
@@ -100,11 +108,11 @@ const handleFacebookResponse = async (response) => {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email address
+                  Email address or Username
                 </label>
                 <input
                   id="email"
-                  type="email"
+                  type="text" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -149,10 +157,10 @@ const handleFacebookResponse = async (response) => {
               {/* Sign In Button */}
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 className="flex w-full justify-center rounded-lg bg-black px-3 py-3 text-base font-bold text-white shadow-sm hover:bg-gray-800  disabled:opacity-50"
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {isSubmitting ? "Signing in..." : "Sign in"}
               </button>
             </form>
 
@@ -169,13 +177,13 @@ const handleFacebookResponse = async (response) => {
             {/* Social login buttons */}
             <div className="mt-6 flex flex-col gap-4 justify-center items-center">
               <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setError("Google login failed.")}
+                onSuccess={handleSocialLoginError}
+                onError={handleSocialLoginError}
                 useOneTap
                 render={(renderProps) => (
                   <button
                     onClick={renderProps.onClick}
-                    disabled={renderProps.disabled || loading}
+                    disabled={renderProps.disabled || isSubmitting}
                     className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-3 text-base font-semibold text-gray-800 shadow-md hover:from-indigo-100 hover:to-blue-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
                   >
                     <img src={google} alt="Google" className="mr-3 h-6 w-6" />
@@ -200,3 +208,4 @@ const handleFacebookResponse = async (response) => {
 };
 
 export default LoginView;
+

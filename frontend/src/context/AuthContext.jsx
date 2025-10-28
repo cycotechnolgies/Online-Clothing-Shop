@@ -1,61 +1,77 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
-const AuthContext = createContext(null);
+// 1. Create the context
+export const AuthContext = createContext();
 
+// 2. Create the provider
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  // We need a loading state to prevent route redirects before user is checked
+  const [loading, setLoading] = useState(true); 
 
+  // 3. Check localStorage on app load
   useEffect(() => {
-    // Check local storage on component mount
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  const login = (data) => {
-    let userData;
     try {
-      if (typeof data === 'string') {
-        // Google JWT token
-        const decodedToken = jwtDecode(data);
-        userData = {
-          name: decodedToken.name,
-          email: decodedToken.email,
-          picture: decodedToken.picture,
-        };
-      } else if (typeof data === 'object' && data !== null) {
-        // Facebook user object
-        userData = {
-          name: data.name,
-          email: data.email,
-          picture: data.picture,
-        };
-      } else {
-        throw new Error('Invalid login data format');
+      const storedUser = localStorage.getItem('userInfo');
+      if (storedUser) {
+        // If user is found, set them
+        setUser(JSON.parse(storedUser));
       }
-
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
     } catch (error) {
-      console.error('Failed to process login data:', error);
+      console.error("Failed to parse user from localStorage", error);
+      localStorage.removeItem('userInfo'); // Clear corrupted data
+    } finally {
+      // We're done checking, so app can proceed
+      setLoading(false); 
     }
+  }, []); // Empty array = runs once on app load
+
+  // 4. Login function for EMAIL/PASSWORD
+  const login = async (email, password) => {
+    // Call your backend /api/auth/login endpoint
+    const { data } = await axios.post('/api/auth/login', { email, password });
+    
+    // The backend returns a { token, user } object.
+    // We'll combine them to store in state and localStorage.
+    const userData = {
+      ...data.user,  // This has id, email, username, userType
+      token: data.token // This is the JWT token
+    };
+
+    // Save to localStorage
+    localStorage.setItem('userInfo', JSON.stringify(userData));
+    // Save to state
+    setUser(userData);
+    
+    // Return user data to LoginView so it can navigate
+    return userData; 
   };
 
+  // 5. Logout function
   const logout = () => {
+    localStorage.removeItem('userInfo');
     setUser(null);
-    localStorage.removeItem('user');
-    console.log('You have been logged out successfully.');
+    // You could also call your /api/auth/logout here
+  };
 
+  // 6. Provide these values to all children
+  const value = {
+    user,
+    setUser,
+    login,
+    logout,
+    loading, // Provide the loading state
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// 7. Custom hook to use the context easily
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -63,4 +79,3 @@ export const useAuth = () => {
   }
   return context;
 };
-

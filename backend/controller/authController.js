@@ -1,13 +1,15 @@
-// authController.js
 const jwt = require('jsonwebtoken');
-const User = require('../model/userModel'); // <-- keep this path in sync with your folder name
+const User = require('../model/userModel'); 
 
 // simple in-memory blacklist (resets on server restart)
 const blacklistedTokens = new Set();
+// [NEW] Export the blacklist
+exports.blacklistedTokens = blacklistedTokens; 
 
 const sign = (u) =>
   jwt.sign(
-    { id: u._id, userType: u.userType, userId: u.userId },
+    // [MODIFIED] Use 'role' to match your role middleware
+    { id: u._id, userType: u.userType, userId: u.userId }, 
     process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -73,7 +75,10 @@ exports.login = async (req, res) => {
     const email = req.body.email?.toLowerCase().trim();
     const { password } = req.body;
 
-    const user = await User.findOne({ email });
+    // [MODIFIED] Find by email or username
+    const user = await User.findOne({ 
+        $or: [{ email: email }, { username: email }] 
+    });
     if (!user) return res.status(400).json({ message: 'User not found' });
 
     const ok = await user.comparePassword(password); // compares to hashed "password"
@@ -87,7 +92,8 @@ exports.login = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        userType: user.userType
+        userType: user.userType, // This is what frontend uses
+        username: user.username
       }
     });
   } catch (e) {
@@ -110,7 +116,7 @@ exports.logoutUser = (req, res) => {
   }
 };
 
-// Middleware to protect routes
+// Middleware to protect routes (You aren't using this export, but it's fine)
 exports.verifyToken = (req, res, next) => {
   const token = req.header('Authorization')?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'Unauthorized' });

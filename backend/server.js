@@ -6,6 +6,7 @@ const path = require("path");
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/productRoutes');
 const cartRoute = require('./routes/cartRoute');
+const userRoutes = require('./routes/userRouter');
 
 
 //express app variable
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use('/api/cart', cartRoute);
+app.use('/api/users', userRoutes);
 
 mongoose
 .connect(process.env.MONGO_URI)
