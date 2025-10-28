@@ -17,7 +17,12 @@ import PaymentView from "./pages/views/admin/PaymentView";
 import OrderView from "./pages/views/admin/Orderview";
 import ProductView from "./pages/views/admin/ProductView";
 import UsersView from "./pages/views/admin/UsersView";
+import UserEditPage from "./pages/views/admin/UserEditPage"; // <-- Kept this one
 import CatagoryView from "./pages/views/admin/CatagoryView";
+
+// [NEW] Import the protection route
+import AdminRoute from "./utils/AdminRoute";
+// [DELETED] The duplicate import from here is gone.
 
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -41,15 +46,23 @@ function App() {
             <Route path="profile" element={<ProfileView />} />
           </Route>
 
-          {/* Protected / Dashboard Routes */}
-          <Route path="/dashboard" element={<RootLayout />}>
+          {/* [MODIFIED] Protected / Dashboard Routes */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <AdminRoute>
+                <RootLayout />
+              </AdminRoute>
+            }
+          >
             <Route index element={<DashboardView />} />
             <Route path="payments" element={<PaymentView />} />
             <Route path="orders" element={<OrderView />} />
             <Route path="products" element={<ProductView />} />
             <Route path="users" element={<UsersView />} />
             <Route path="categories" element={<CatagoryView />} />
-            {/* Add more nested routes under dashboard if needed */}
+            {/* [NEW] Add the edit user route */}
+            <Route path="user/:id/edit" element={<UserEditPage />} />
           </Route>
         </Routes>
       </AuthProvider>

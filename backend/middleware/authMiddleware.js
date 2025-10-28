@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { isBlacklisted } = require('../controller/authController');
+// [MODIFIED] Import the actual Set
+const { blacklistedTokens } = require('../controller/authController'); 
 
 module.exports = function requireAuth(req, res, next) {
   const token =
@@ -8,11 +9,12 @@ module.exports = function requireAuth(req, res, next) {
       : null;
 
   if (!token) return res.status(401).json({ message: 'Unauthorized' });
-  if (isBlacklisted(token)) return res.status(403).json({ message: 'Token is blacklisted' });
+  // [MODIFIED] Check the Set directly
+  if (blacklistedTokens.has(token)) return res.status(403).json({ message: 'Token is blacklisted' });
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = payload; // { sub, userType, userId, iat, exp }
+    req.user = payload; // { id, userType, userId, iat, exp }
     next();
   } catch {
     res.status(401).json({ message: 'Invalid or expired token' });
