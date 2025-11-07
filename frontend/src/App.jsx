@@ -12,6 +12,7 @@ import SingleProduct from "./pages/views/SingleProduct";
 import CategoryView from "./pages/views/CategoryView";
 import Cartview from "./pages/views/CartView";
 import ProfileView from "./pages/views/ProfileView";
+import OrderManagement from "./pages/views/OrderManagement";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -39,6 +40,7 @@ function App() {
             <Route path="cart" element={<Cartview/>} />
             <Route path="checkout" element={<CheckoutView />} />
             <Route path="profile" element={<ProfileView />} /> 
+            <Route path="ordermanage" element={<OrderManagement />} /> 
           </Route>
         </Routes>
       </AuthProvider>
