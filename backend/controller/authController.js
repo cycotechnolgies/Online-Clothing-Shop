@@ -123,3 +123,7 @@ exports.verifyToken = (req, res, next) => {
     return res.status(403).json({ message: 'Invalid token' });
   }
 };
+
+// ✅ Add this new function
+exports.isBlacklisted = (token) => blacklistedTokens.has(token);
+
