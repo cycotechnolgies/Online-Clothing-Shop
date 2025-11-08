@@ -1,8 +1,8 @@
-import StatCard from "../../components/StatCard";
-import Modal from "../../components/Modal";
-import OrderDetailPanel from "../../components/OrderDetailPanel";
-import OrderFiltersAndSearch from "../../components/OrderFiltersAndSearch";
-import OrderTable from "../../components/OrderTable";
+import StatCard from "../../components/orderManagement/StatCard";
+import Modal from "../../components/orderManagement/Modal";
+import OrderDetailPanel from "../../components/orderManagement/OrderDetailPanel";
+import OrderFiltersAndSearch from "../../components/orderManagement/OrderFiltersAndSearch";
+import OrderTable from "../../components/orderManagement/OrderTable";
 import React, { useState, useMemo, useCallback } from 'react';
 import {  Clock, CheckCircle, Truck, TrendingUp } from 'lucide-react';
 
